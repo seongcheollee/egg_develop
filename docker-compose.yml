@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  jupyter:
+    image: jupyter/all-spark-notebook:python-3.8
+    ports:
+      - '8888:8888'
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
+    networks:
+      - my_network
+
+  mongodb:
+    image: yisc/mongo-arm64
+    container_name: mongodb
+    hostname: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb:/data/db
+      # - /Users/seongcheollee/Documents/Docker_A/mongodb:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+      - MONGO_INITDB_DATABASE=mydb
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
